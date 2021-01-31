@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "V/TeYQlbQ3R+WYKPt0QdRo1gk15DTI7fDW3qoVZuS2L2S0r7fb46m3ywcrxNUY2Gcim96OmUhRdvtPtlBFGxdg==",
+  "success": true,
+  "projectFilePath": "E:\\ZP3CS_projekt\\ZP3CS_projekt\\ZP3CS_projekt.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Jaromír\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}

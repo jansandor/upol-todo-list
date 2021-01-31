@@ -1,0 +1,220 @@
+﻿<Window x:Class="ZP3CS_projekt.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ZP3CS_projekt"
+        xmlns:commands="clr-namespace:ZP3CS_projekt.Commands"
+        mc:Ignorable="d"
+        Title="ToDoList" Height="450" Width="550"
+        WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Styles/MainWindowStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Window.CommandBindings>
+        <CommandBinding Command="commands:CustomCommands.RemoveTaskCommand"
+                        CanExecute="RemoveTaskCommand_CanExecute"
+                        Executed="RemoveTaskCommand_Executed" />
+        <CommandBinding Command="commands:CustomCommands.MarkTaskAsFinishedCommand"
+                        CanExecute="MarkTaskAsFinishedCommand_CanExecute"
+                        Executed="MarkTaskAsFinishedCommand_Executed" />
+        <CommandBinding Command="commands:CustomCommands.EditTaskCommand"
+                        CanExecute="EditTaskCommand_CanExecute"
+                        Executed="EditTaskCommand_Executed" />
+        <CommandBinding Command="commands:CustomCommands.TaskProgress_DecrCommand"
+                        CanExecute="TaskProgress_DecrCommand_CanExecute"
+                        Executed="TaskProgress_DecrCommand_Executed" />
+        <CommandBinding Command="commands:CustomCommands.TaskProgress_IncrCommand"
+                        CanExecute="TaskProgress_IncrCommand_CanExecute"
+                        Executed="TaskProgress_IncrCommand_Executed" />
+    </Window.CommandBindings>
+    <!--Main Grid-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!--Menu-->
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="5">
+            <Button Name="AddTask_btn"
+                    Click="AddTask_OnClick"
+                    Style="{StaticResource MenuButton_Style}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="pack://application:,,,/Icons/plus.png"
+                           Style="{StaticResource MenuButton_ImageStyle}"/>
+                    <Label Style="{StaticResource MenuButton_LabelStyle}">Add Task</Label>
+                </StackPanel>
+            </Button>
+            <Button Name="EditTask_btn"
+                    Command="commands:CustomCommands.EditTaskCommand"
+                    Style="{StaticResource MenuButton_Style}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="pack://application:,,,/Icons/edit.png"
+                           Style="{StaticResource MenuButton_ImageStyle}"/>
+                    <Label Style="{StaticResource MenuButton_LabelStyle}">Edit Task</Label>
+                </StackPanel>
+            </Button>
+            <Button Name="RemoveTask_btn"
+                    Command="commands:CustomCommands.RemoveTaskCommand"
+                    Style="{StaticResource MenuButton_Style}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="pack://application:,,,/Icons/remove.png"
+                           Style="{StaticResource MenuButton_ImageStyle}"/>
+                    <Label Style="{StaticResource MenuButton_LabelStyle}">Remove Task</Label>
+                </StackPanel>
+            </Button>
+            <Button Name="MarkTaskFinished_btn"
+                    Command="commands:CustomCommands.MarkTaskAsFinishedCommand"
+                    Style="{StaticResource MenuButton_Style}">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="pack://application:,,,/Icons/checked.png"
+                           Style="{StaticResource MenuButton_ImageStyle}"/>
+                    <Label Style="{StaticResource MenuButton_LabelStyle}">Mark as Finished</Label>
+                </StackPanel>
+            </Button>
+            <Label>Filter ToDo Tasks:</Label>
+            <ComboBox Name="TaskFilter_ComboBox"
+                      SelectionChanged="TaskFilter_ComboBox_SelectionChanged">
+                <ComboBoxItem Name="TaskFilterOption_AllTasks"
+                              IsSelected="True">All Tasks</ComboBoxItem>
+                <ComboBoxItem Name="TaskFilterOption_TodaysTasks">Today's Tasks</ComboBoxItem>
+                <ComboBoxItem Name="TaskFilterOption_TomorrowsTasks">Tomorrow's Tasks</ComboBoxItem>
+            </ComboBox>
+        </StackPanel>
+        <!--Menu End-->
+        <TabControl Grid.Row="0" Grid.Column="1"
+                    SelectionChanged="TabControl_SelectionChanged"
+                    Margin="0 0 1 1">
+            <!--ToDo Tasks Page-->
+            <TabItem Header="ToDo Tasks"
+                     Name="TodoTaskListPage"
+                     Padding="10 5 10 5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Empty Todo List Label-->
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               Name="EmptyTodoTaskList_label"
+                               Text="Just relax and enjoy, there is nothing to do!"
+                               Style="{StaticResource EmptyList_LabelStyle}"/>
+                    <!--Todo List-->
+                    <ListView  Grid.Row="1" Grid.Column="0"
+                               Name="TodoTask_ListView"
+                               Style="{StaticResource TaskListView_Style}"
+                               ItemContainerStyle="{StaticResource TaskListView_ItemStyle}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Description}"
+                                               Style="{StaticResource ListItem_TaskDescriptionStyle}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Deadline"/>
+                                        <Label Content="{Binding Deadline}"
+                                               ContentStringFormat="dd.MM.yyyy"/>
+                                        <TextBlock VerticalAlignment="Center">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0}:{1:00}">
+                                                    <Binding Path="DeadlineTime.Hours"/>
+                                                    <Binding Path="DeadlineTime.Minutes"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <!--Progress Bar & Buttons-->
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                            <ColumnDefinition Width="auto"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Label Grid.Row="0" Grid.Column="0">Task progress</Label>
+                                        <ProgressBar Grid.Row="0" Grid.Column="1"
+                                                     Minimum="0"
+                                                     Maximum="{Binding MaxProgressValue}"                                                     
+                                                     Value="{Binding ProgressValue}"
+                                                     Name="TaskProgressBar"                                                
+                                                     Height="15"
+                                                     Margin="0 0 10 0"
+                                                     Width="200"/>
+                                        <Button Grid.Row="0" Grid.Column="2"
+                                                Padding="5"                                                
+                                                Name="ProgressDecr_btn"   
+                                                Command="commands:CustomCommands.TaskProgress_DecrCommand"
+                                                CommandParameter="{Binding ID}">
+                                            <Image Source="pack://application:,,,/Icons/progressdecr.png" Width="12"/>
+                                        </Button>
+                                        <Button Grid.Row="0" Grid.Column="3"
+                                                Padding="5"                                                
+                                                Name="ProgressIncr_btn"
+                                                Command="commands:CustomCommands.TaskProgress_IncrCommand"
+                                                CommandParameter="{Binding ID}">
+                                            <Image Source="pack://application:,,,/Icons/progressincr.png" Width="16"/>
+                                        </Button>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TabItem>
+            <!--Finished Tasks Page-->
+            <TabItem Header="Finished Tasks"
+                     Name="FinishedTaskListPage"
+                     Padding="10 5 10 5">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <!--Empty Finished Tasks List Label-->
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               Name="EmptyFinishedTaskList_label"
+                               Text="You have not finished any task yet."
+                               Style="{StaticResource EmptyList_LabelStyle}"/>
+                    <!--Finished Tasks List-->
+                    <ListView Grid.Row="1" Grid.Column="0"
+                              Name="FinishedTask_ListView"
+                              Style="{StaticResource TaskListView_Style}"
+                              ItemContainerStyle="{StaticResource TaskListView_ItemStyle}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <TextBlock Text="{Binding Description}"
+                                               Style="{StaticResource ListItem_TaskDescriptionStyle}"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="Finished"/>
+                                        <Label Content="{Binding Finished}"
+                                               ContentStringFormat="dd.MM.yyyy HH:mm"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Icons\checked.png" />
+    <None Remove="Icons\edit.png" />
+    <None Remove="Icons\plus.png" />
+    <None Remove="Icons\progressdecr.png" />
+    <None Remove="Icons\progressincr.png" />
+    <None Remove="Icons\remove.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Icons\checked.png" />
+    <Resource Include="Icons\edit.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Icons\plus.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Icons\progressdecr.png" />
+    <Resource Include="Icons\progressincr.png" />
+    <Resource Include="Icons\remove.png" />
+  </ItemGroup>
+
+</Project>
